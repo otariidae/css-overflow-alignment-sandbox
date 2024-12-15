@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CSS Overflow Alignment Sandbox</title>
+    <style>
+        .scroll-container {
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            background-color: lightcoral;
+            padding: 10px;
+            border: 1px solid black;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .content {
+            margin: 0;
+            padding: 10px;
+            background-color: lightblue;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <p>This sandbox demonstrates how combination of <code>justify-content</code>, <code>align-items</code>, and <code>overflow-y: auto</code> works in CSS flexbox.</p>
+    <div class="container">
+        <p class="content">example</p>
+    </div>
+
+    <label for="word-count">word count:
+        <input type="range" name="word-count" min="0" max="100" value="1">
+    </label>
+
+    <label for="justify-content">justify-content:
+        <select name="justify-content"></select>
+    </label>
+
+    <label for="align-items">align-items:
+        <select name="align-items"></select>
+    </label>
+
+    <label for="flex-direction">flex-direction:
+        <select name="flex-direction">
+            <option value="row">row</option>
+            <option value="column">column</option>
+        </select>
+    </label>
+
+    <script>
+        const range = document.querySelector('input[name="word-count"]');
+        range.addEventListener('input', e => {
+            document.querySelector('.content').textContent = 'example '.repeat(e.target.value);
+        });
+
+        const justifyContentSelect = document.querySelector('select[name="justify-content"]');
+        const contentDistributionKeywords = [
+            'space-around',
+            'space-between',
+            'space-evenly',
+            'stretch',
+        ];
+        const overflowPositionKeywords = [
+            'safe',
+            'unsafe',
+        ];
+        const contentPositionKeywords = [
+            'center',
+            'start',
+            'end',
+            'flex-start',
+            'flex-end',
+        ];
+        const justifyContentKeywords = [
+            'normal',
+            ...contentDistributionKeywords,
+            ...contentPositionKeywords,
+            ...overflowPositionKeywords.flatMap(overflowPositionKeyword => contentPositionKeywords.map(contentPositionKeyword => `${overflowPositionKeyword} ${contentPositionKeyword}`)),
+        ];
+        for (const option of justifyContentKeywords) {
+            const el = document.createElement('option');
+            el.value = option;
+            el.textContent = option;
+            justifyContentSelect.append(el);
+        }
+        justifyContentSelect.addEventListener('change', e => {
+            document.querySelector('.container').style.justifyContent = e.target.value;
+        });
+
+        const alignItemsSelect = document.querySelector('select[name="align-items"]');
+        const baselinePositionKeywords = [
+            'baseline',
+            'first baseline',
+            'last baseline',
+        ];
+        const selfPositionKeywords = [
+            'center',
+            'start',
+            'end',
+            'self-start',
+            'self-end',
+            'flex-start',
+            'flex-end',
+        ];
+        const alignItemsKeywords = [
+            'normal',
+            'stretch',
+            ...baselinePositionKeywords,
+            ...selfPositionKeywords,
+            ...overflowPositionKeywords.flatMap(overflowPositionKeyword => selfPositionKeywords.map(selfPositionKeyword => `${overflowPositionKeyword} ${selfPositionKeyword}`)),
+            'anchor-center',
+        ];
+        for (const option of alignItemsKeywords) {
+            const el = document.createElement('option');
+            el.value = option;
+            el.textContent = option;
+            alignItemsSelect.append(el);
+        }
+        alignItemsSelect.addEventListener('change', e => {
+            document.querySelector('.container').style.alignItems = e.target.value;
+        });
+
+        const flexDirectionSelect = document.querySelector('select[name="flex-direction"]');
+        flexDirectionSelect.addEventListener('change', e => {
+            document.querySelector('.container').style.flexDirection = e.target.value;
+        });
+    </script>
+</body>
+</html>
